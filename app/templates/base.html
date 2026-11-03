@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}N7 Gestão{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/n7.css') }}">
+</head>
+<body>
+  <div class="n7-shell d-flex">
+    <aside id="n7Sidebar" class="n7-sidebar d-none d-md-flex flex-column">
+      <div class="n7-brand">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="N7 Gestão" class="n7-logo">
+        <div>
+          <div class="n7-brand-nome">N7 Gestão</div>
+          <div class="n7-brand-slogan">Gestão Inteligente de Serviços</div>
+        </div>
+      </div>
+      <nav class="n7-nav flex-grow-1">
+        <a href="{{ url_for('dashboard.dashboard') }}" class="n7-nav-item {% if request.endpoint == 'dashboard.dashboard' %}ativo{% endif %}">
+          <i class="bi bi-layout-dashboard"></i> Dashboard
+        </a>
+        {% if pode(current_user, 'clientes') %}
+        <a href="{{ url_for('clientes.listar') }}" class="n7-nav-item {% if request.endpoint and request.endpoint.startswith('clientes.') %}ativo{% endif %}">
+          <i class="bi bi-people"></i> Clientes
+        </a>
+        {% endif %}
+        {% if pode(current_user, 'catalogo') %}
+        <a href="{{ url_for('catalogo.listar') }}" class="n7-nav-item {% if request.endpoint and request.endpoint.startswith('catalogo.') %}ativo{% endif %}">
+          <i class="bi bi-box-seam"></i> Produtos e Serviços
+        </a>
+        {% endif %}
+        {% if pode(current_user, 'orcamentos') %}
+        <a href="{{ url_for('orcamentos.listar') }}" class="n7-nav-item {% if request.endpoint and request.endpoint.startswith('orcamentos.') %}ativo{% endif %}">
+          <i class="bi bi-file-earmark-text"></i> Orçamentos
+        </a>
+        {% endif %}
+        {% if pode(current_user, 'ordens_servico') %}
+        <a href="{{ url_for('ordens_servico.listar') }}" class="n7-nav-item {% if request.endpoint and request.endpoint.startswith('ordens_servico.') %}ativo{% endif %}">
+          <i class="bi bi-wrench"></i> Ordens de Serviço
+        </a>
+        {% endif %}
+        {% if pode(current_user, 'financeiro') %}
+        <a href="{{ url_for('financeiro.listar') }}" class="n7-nav-item {% if request.endpoint and request.endpoint.startswith('financeiro.') %}ativo{% endif %}">
+          <i class="bi bi-cash-coin"></i> Financeiro
+        </a>
+        {% endif %}
+        {% if pode(current_user, 'relatorios') %}
+        <a href="{{ url_for('relatorios.index') }}" class="n7-nav-item {% if request.endpoint and request.endpoint.startswith('relatorios.') %}ativo{% endif %}">
+          <i class="bi bi-bar-chart"></i> Relatórios
+        </a>
+        {% endif %}
+        {% if pode(current_user, 'configuracoes') %}
+        <a href="{{ url_for('configuracoes.index') }}" class="n7-nav-item {% if request.endpoint and request.endpoint.startswith('configuracoes.') %}ativo{% endif %}">
+          <i class="bi bi-gear"></i> Configurações
+        </a>
+        {% endif %}
+        {% if pode(current_user, 'administracao') %}
+        <a href="{{ url_for('administracao.index') }}" class="n7-nav-item {% if request.endpoint and request.endpoint.startswith('administracao.') %}ativo{% endif %}">
+          <i class="bi bi-shield-lock"></i> Administração
+        </a>
+        {% endif %}
+      </nav>
+      <div class="n7-sidebar-footer">
+        <div class="n7-sidebar-user">
+          <i class="bi bi-person-circle"></i>
+          <div>
+            <div class="n7-sidebar-user-nome">{{ current_user.nome }}</div>
+            <div class="n7-sidebar-user-perfil">{{ current_user.perfil }}</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="n7-overlay d-none" id="n7Overlay"></div>
+
+    <div class="n7-main flex-grow-1 d-flex flex-column">
+      <header class="n7-topbar d-flex align-items-center">
+        <button class="n7-sidebar-toggle btn btn-sm n7-btn-icon" id="n7SidebarToggle" type="button">
+          <i class="bi bi-list"></i>
+        </button>
+        <div class="n7-topbar-title">
+          {% block page_title %}N7 Gestão{% endblock %}
+        </div>
+        <div class="n7-topbar-right ms-auto d-flex align-items-center gap-2">
+          <div class="n7-user-menu position-relative">
+            <button class="n7-user-btn btn btn-sm" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person"></i>
+              <span class="d-none d-sm-inline">{{ current_user.nome }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end n7-dropdown">
+              <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Sair</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <main class="n7-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show n7-flash" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </main>
+      <footer class="n7-footer">
+        <div class="n7-footer-inner">
+          <span>N7 Gestão – Uma solução N7 Info</span>
+          <span class="d-none d-sm-inline">Gestão Inteligente de Serviços</span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const toggleBtn = document.getElementById('n7SidebarToggle');
+    const sidebar = document.getElementById('n7Sidebar');
+    const overlay = document.getElementById('n7Overlay');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', () => {
+        const show = sidebar.classList.toggle('show');
+        overlay.classList.toggle('d-none', !show);
+        overlay.style.display = show ? 'block' : 'none';
+      });
+    }
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth > 992) return;
+      const isLink = e.target.closest('a.n7-nav-item');
+      const sidebarEl = document.getElementById('n7Sidebar');
+      if (sidebarEl && sidebarEl.classList.contains('show') && !sidebarEl.contains(e.target) && !isLink) {
+        sidebarEl.classList.remove('show');
+        const ov = document.getElementById('n7Overlay');
+        if (ov) ov.classList.add('d-none');
+      }
+    });
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

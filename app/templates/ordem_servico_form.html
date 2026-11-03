@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{% if edicao %}Editar{% else %}Nova{% endif %} Ordem de Serviço – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">OS {{ os_reg.numero_exibicao if os_reg }}</h4>
+  <a href="{{ url_for('ordens_servico.listar') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+</div>
+
+<div class="card mb-3" style="max-width: 1000px;">
+  <div class="card-header">Dados da Ordem de Serviço</div>
+  <div class="card-body">
+    <form method="post" action="{% if edicao %}{{ url_for('ordens_servico.editar', ordem_id=os_reg.id) }}{% else %}{{ url_for('ordens_servico.criar') }}{% endif %}">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Cliente *</label>
+          <select class="form-select" name="cliente_id" disabled>
+            <option value="{{ os_reg.cliente_id }}">{{ os_reg.cliente.nome }}</option>
+          </select>
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Endereço</label>
+          <input type="text" class="form-control" name="endereco" value="{{ os_reg.endereco }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Telefone</label>
+          <input type="text" class="form-control" name="telefone" value="{{ os_reg.telefone }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Data agendada</label>
+          <input type="date" class="form-control" name="data_agendada" value="{{ os_reg.data_agendada.strftime('%Y-%m-%d') if os_reg.data_agendada else '' }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Horário</label>
+          <input type="text" class="form-control" name="horario" value="{{ os_reg.horario }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Técnico</label>
+          <select class="form-select" name="tecnico_id">
+            <option value="">--</option>
+            {% for t in tecnicos %}
+            <option value="{{ t.id }}" {% if os_reg.tecnico_id == t.id %}selected{% endif %}>{{ t.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Status</label>
+          <input type="text" class="form-control" value="{{ status_labels.get(os_reg.status, os_reg.status) }}" disabled>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Descrição da solicitação</label>
+          <textarea class="form-control" name="descricao_solicitacao" rows="3">{{ os_reg.descricao_solicitacao }}</textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Observações</label>
+          <textarea class="form-control" name="observacoes" rows="2">{{ os_reg.observacoes }}</textarea>
+        </div>
+      </div>
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" type="submit">Salvar</button>
+        {% if os_reg %}
+        <a class="btn btn-outline-secondary" href="{{ url_for('ordens_servico.execucao', ordem_id=os_reg.id) }}">Registrar execução</a>
+        <form method="post" action="{{ url_for('ordens_servico.alterar_status', ordem_id=os_reg.id, status='em_atendimento') }}" class="d-inline">
+          <button class="btn btn-outline-secondary" type="submit">Iniciar atendimento</button>
+        </form>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

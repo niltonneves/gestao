@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Ordens de Serviço – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Ordens de Serviço</h4>
+  <a href="{{ url_for('ordens_servico.criar') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Nova OS</a>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <form method="get" class="row g-2">
+      <div class="col-md-3">
+        <select class="form-select" name="status">
+          <option value="">Todos</option>
+          {% for k, v in status_labels.items() %}
+          <option value="{{ k }}" {% if status == k %}selected{% endif %}>{{ v }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" name="tecnico_id">
+          <option value="">Todos os técnicos</option>
+          {% for t in tecnicos %}
+          <option value="{{ t.id }}" {% if tecnico_id and tecnico_id|int == t.id %}selected{% endif %}>{{ t.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" name="q" placeholder="Buscar por número ou descrição..." value="{{ q }}">
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-outline-secondary" type="submit">Filtrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Cliente</th>
+            <th>Técnico</th>
+            <th>Status</th>
+            <th>Abertura</th>
+            <th>Agendada</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in ordens %}
+          <tr>
+            <td>{{ o.numero_exibicao }}</td>
+            <td>{{ o.cliente.nome }}</td>
+            <td>{{ o.tecnico.nome if o.tecnico else '-' }}</td>
+            <td><span class="badge text-bg-{{ badge_classes.get(o.status, 'secondary') }} n7-badge-status">{{ status_labels.get(o.status, o.status) }}</span></td>
+            <td>{{ o.data_abertura.strftime('%d/%m/%Y') if o.data_abertura else '-' }}</td>
+            <td>{{ o.data_agendada.strftime('%d/%m/%Y') if o.data_agendada else '-' }}</td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <a class="btn btn-outline-primary" href="{{ url_for('ordens_servico.editar', ordem_id=o.id) }}">Abrir</a>
+                {% if o.status not in ['concluida', 'entregue', 'cancelada'] %}
+                <form method="post" action="{{ url_for('ordens_servico.alterar_status', ordem_id=o.id, status='em_atendimento') }}" class="d-inline">
+                  <button class="btn btn-outline-secondary" type="submit">Avançar</button>
+                </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" class="text-center text-muted py-4">Nenhuma ordem de serviço encontrada.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

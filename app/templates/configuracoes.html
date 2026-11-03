@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Configurações – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Configurações</h4>
+  <a href="{{ url_for('configuracoes.editar') }}" class="btn btn-primary btn-sm">Editar</a>
+</div>
+
+<div class="card" style="max-width: 1000px;">
+  <div class="card-body">
+    {% if empresa %}
+    <div class="row g-3">
+      <div class="col-md-6"><strong>Razão social:</strong> {{ empresa.razao_social }}</div>
+      <div class="col-md-6"><strong>Nome fantasia:</strong> {{ empresa.nome_fantasia or '-' }}</div>
+      <div class="col-md-4"><strong>CPF/CNPJ:</strong> {{ empresa.cpf_cnpj or '-' }}</div>
+      <div class="col-md-4"><strong>Insc. Estadual:</strong> {{ empresa.inscricao_estadual or '-' }}</div>
+      <div class="col-md-4"><strong>Endereço:</strong> {{ empresa.endereco or '-' }}</div>
+      <div class="col-md-4"><strong>CEP:</strong> {{ empresa.cep or '-' }}</div>
+      <div class="col-md-4"><strong>Telefone:</strong> {{ empresa.telefone or '-' }}</div>
+      <div class="col-md-4"><strong>WhatsApp:</strong> {{ empresa.whatsapp or '-' }}</div>
+      <div class="col-md-4"><strong>E-mail:</strong> {{ empresa.email or '-' }}</div>
+      <div class="col-md-4"><strong>Site:</strong> {{ empresa.site or '-' }}</div>
+      <div class="col-md-4"><strong>Responsável:</strong> {{ empresa.responsavel or '-' }}</div>
+      <div class="col-md-4"><strong>Banco:</strong> {{ empresa.banco or '-' }}</div>
+      <div class="col-md-4"><strong>Chave PIX:</strong> {{ empresa.chave_pix or '-' }}</div>
+      <div class="col-12"><strong>Observações:</strong> {{ empresa.observacoes or '-' }}</div>
+    </div>
+    {% else %}
+    <p class="text-muted">Nenhuma empresa configurada.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

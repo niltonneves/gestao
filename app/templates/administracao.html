@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Administração – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Administração</h4>
+  <a href="{{ url_for('administracao.usuario_novo') }}" class="btn btn-primary btn-sm">Novo Usuário</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Usuários</div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Situação</th></tr>
+            </thead>
+            <tbody>
+              {% for u in usuarios %}
+              <tr>
+                <td>{{ u.nome }}</td>
+                <td>{{ u.email }}</td>
+                <td><span class="badge text-bg-primary">{{ u.perfil }}</span></td>
+                <td><span class="badge text-bg-{{ 'success' if u.ativo else 'secondary' }}">{{ 'Ativo' if u.ativo else 'Inativo' }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Técnicos</div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr><th>Nome</th><th>CPF</th><th>Especialidade</th><th>Situação</th></tr>
+            </thead>
+            <tbody>
+              {% for t in tecnicos %}
+              <tr>
+                <td>{{ t.nome }}</td>
+                <td>{{ t.cpf }}</td>
+                <td>{{ t.especialidade }}</td>
+                <td><span class="badge text-bg-{{ 'success' if t.situacao == 'ativo' else 'secondary' }}">{{ t.situacao }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Execução – OS {{ os_reg.numero_exibicao }} – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Execução Técnica – {{ os_reg.numero_exibicao }}</h4>
+  <a href="{{ url_for('ordens_servico.editar', ordem_id=os_reg.id) }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+</div>
+
+<div class="card" style="max-width: 1000px;">
+  <div class="card-header">Registro de Execução</div>
+  <div class="card-body">
+    <form method="post" action="{{ url_for('ordens_servico.execucao', ordem_id=os_reg.id) }}">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label">Diagnóstico</label>
+          <textarea class="form-control" name="diagnostico" rows="2">{{ exec_registro.diagnostico if exec_registro else '' }}</textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Serviços executados</label>
+          <textarea class="form-control" name="servicos_executados" rows="2">{{ exec_registro.servicos_executados if exec_registro else '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Materiais utilizados</label>
+          <textarea class="form-control" name="materiais_utilizados" rows="2">{{ exec_registro.materiais_utilizados if exec_registro else '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Equipamentos instalados</label>
+          <textarea class="form-control" name="equipamentos_instalados" rows="2">{{ exec_registro.equipamentos_instalados if exec_registro else '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Problemas encontrados</label>
+          <textarea class="form-control" name="problemas_encontrados" rows="2">{{ exec_registro.problemas_encontrados if exec_registro else '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Recomendações</label>
+          <textarea class="form-control" name="recomendacoes" rows="2">{{ exec_registro.recomendacoes if exec_registro else '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Data e hora de início</label>
+          <input type="text" class="form-control" name="inicio_em" value="{{ exec_registro.inicio_em.strftime('%Y-%m-%dT%H:%M') if exec_registro and exec_registro.inicio_em else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Data e hora de término</label>
+          <input type="text" class="form-control" name="termino_em" value="{{ exec_registro.termino_em.strftime('%Y-%m-%dT%H:%M') if exec_registro and exec_registro.termino_em else '' }}">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Fotos (caminho/URL)</label>
+          <input type="text" class="form-control" name="fotos" value="{{ exec_registro.fotos if exec_registro else '' }}">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Assinatura do cliente</label>
+          <input type="text" class="form-control" name="assinatura_cliente" value="{{ exec_registro.assinatura_cliente if exec_registro else '' }}">
+        </div>
+      </div>
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" type="submit">Salvar execução</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

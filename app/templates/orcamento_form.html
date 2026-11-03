@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block title %}{% if edicao %}Editar Orçamento {{ "%05d"|format(orcamento.numero) }}{% else %}Novo Orçamento{% endif %} – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Orçamento {{ "%05d"|format(orcamento.numero) if orcamento }}</h4>
+  <a href="{{ url_for('orcamentos.listar') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+</div>
+
+<div class="card mb-3" style="max-width: 1200px;">
+  <div class="card-header">Dados do Orçamento</div>
+  <div class="card-body">
+    <form method="post" action="{% if edicao %}{{ url_for('orcamentos.editar', orcamento_id=orcamento.id) }}{% else %}{{ url_for('orcamentos.criar') }}{% endif %}" id="orcamentoForm">
+      {% if not edicao %}
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Cliente *</label>
+          <select class="form-select" name="cliente_id" required>
+            <option value="">Selecione...</option>
+            {% for c in clientes %}
+            <option value="{{ c.id }}">{{ c.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Endereço de execução</label>
+          <input type="text" class="form-control" name="endereco_execucao">
+        </div>
+      </div>
+      {% endif %}
+
+      {% if edicao %}
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Número</label>
+          <input type="text" class="form-control" value="{{ "%05d"|format(orcamento.numero) }}" disabled>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Status</label>
+          <input type="text" class="form-control" value="{{ orcamento.status }}" disabled>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Data de emissão</label>
+          <input type="text" class="form-control" value="{{ orcamento.data_emissao.strftime('%d/%m/%Y %H:%M') if orcamento.data_emissao else '' }}" disabled>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Validade</label>
+          <input type="date" class="form-control" name="validade" value="{{ orcamento.validade.strftime('%Y-%m-%d') if orcamento.validade else '' }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Condição de pagamento</label>
+          <select class="form-select" name="condicao_pagamento">
+            {% for c in condicoes %}
+            <option value="{{ c }}" {% if orcamento and orcamento.condicao_pagamento == c %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Prazo de execução</label>
+          <input type="text" class="form-control" name="prazo_execucao" value="{{ orcamento.prazo_execucao if orcamento else '' }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Garantia</label>
+          <input type="text" class="form-control" name="garantia" value="{{ orcamento.garantia if orcamento else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Observações</label>
+          <textarea class="form-control" name="observacoes" rows="2">{{ orcamento.observacoes if orcamento else '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="row g-3 mt-3">
+        <div class="col-md-3">
+          <label class="form-label">Desconto</label>
+          <input type="number" step="0.01" class="form-control" name="desconto" value="{{ totais.desconto if totais else 0 }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Tipo de desconto</label>
+          <select class="form-select" name="desconto_tipo">
+            <option value="valor" {% if not orcamento or orcamento.desconto_tipo == 'valor' %}selected{% endif %}>Valor (R$)</option>
+            <option value="percentual" {% if orcamento and orcamento.desconto_tipo == 'percentual' %}selected{% endif %}>Percentual (%)</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Acréscimos (R$)</label>
+          <input type="number" step="0.01" class="form-control" name="acrescimos" value="{{ (orcamento.acrescimos if orcamento else 0) or 0 }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Entrada (R$)</label>
+          <input type="number" step="0.01" class="form-control" name="entrada" value="{{ (orcamento.entrada if orcamento else 0) or 0 }}">
+        </div>
+      </div>
+      {% endif %}
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" type="submit" name="acao" value="salvar">Salvar</button>
+        {% if not edicao %}
+        <button class="btn btn-success" type="submit" name="acao" value="enviar">Salvar e enviar</button>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card mb-3" style="max-width: 1200px;">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>Itens do Orçamento</span>
+  </div>
+  <div class="card-body">
+    <form method="post" action="{% if edicao %}{{ url_for('orcamentos.editar', orcamento_id=orcamento.id) }}{% else %}{{ url_for('orcamentos.criar') }}{% endif %}" class="mb-3">
+      <input type="hidden" name="acao" value="adicionar_item">
+      {% if not edicao %}
+      <input type="hidden" name="cliente_id" value="{{ request.form.cliente_id or '' }}">
+      {% endif %}
+      <div class="row g-2 align-items-end">
+        <div class="col-md-5">
+          <select name="produto_servico_id" id="n7ProdutoSelect" class="form-select">
+            <option value="">Selecione um produto/serviço...</option>
+            {% for p in produtos %}
+            <option value="{{ p.id }}" data-codigo="{{ p.codigo }}" data-descricao="{{ p.descricao }}" data-unidade="{{ p.unidade }}" data-valor="{{ p.preco_venda }}">{{ p.codigo }} – {{ p.descricao }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" name="item_codigo" id="n7ItemCodigo" placeholder="Código">
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" name="item_descricao" id="n7ItemDescricao" placeholder="Descrição">
+        </div>
+        <div class="col" style="width: 90px;">
+          <input type="number" name="item_quantidade" min="0" step="0.01" value="1" required>
+        </div>
+        <div class="col" style="width: 110px;">
+          <input type="text" name="item_unidade" id="n7ItemUnidade" value="UN">
+        </div>
+        <div class="col" style="width: 130px;">
+          <input type="number" name="item_valor_unitario" id="n7ItemValor" min="0" step="0.01" value="0">
+        </div>
+        <div class="col" style="width: 90px;">
+          <input type="number" name="item_desconto" min="0" step="0.01" value="0" title="Desconto (%)">
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-sm btn-outline-primary" type="submit">Adicionar</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Quantidade</th>
+            <th>Valor unitário</th>
+            <th>Desconto</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in itens %}
+          <tr>
+            <td>{{ i.codigo }}</td>
+            <td>{{ i.descricao }}</td>
+            <td>{{ i.quantidade }}</td>
+            <td>{{ "%.2f"|format(i.valor_unitario) }}</td>
+            <td>{{ i.desconto }}</td>
+            <td>{{ "%.2f"|format(i.total) }}</td>
+            <td>
+              <form method="post" action="{% if edicao %}{{ url_for('orcamentos.editar', orcamento_id=orcamento.id) }}{% else %}{{ url_for('orcamentos.criar') }}{% endif %}" class="d-inline">
+                <input type="hidden" name="acao" value="remover_item">
+                <input type="hidden" name="item_id" value="{{ i.id }}">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Remover</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" class="text-center text-muted py-3">Nenhum item adicionado.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const produtoSelect = document.getElementById('n7ProdutoSelect');
+  produtoSelect?.addEventListener('change', () => {
+    const opt = produtoSelect.options[produtoSelect.selectedIndex];
+    if (!opt || !opt.value) return;
+    document.getElementById('n7ItemCodigo').value = opt.dataset.codigo || '';
+    document.getElementById('n7ItemDescricao').value = opt.dataset.descricao || '';
+    document.getElementById('n7ItemUnidade').value = opt.dataset.unidade || 'UN';
+    document.getElementById('n7ItemValor').value = opt.dataset.valor || '0';
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,297 @@
+/* ============================================================
+   N7 Gestão – Identidade Visual
+   ============================================================ */
+:root {
+  --n7-blue: #1F3D7C;
+  --n7-blue-dark: #082E68;
+  --n7-navy: #082E68;
+  --n7-yellow: #F8E71C;
+  --n7-green: #4CAF50;
+  --n7-white: #FFFFFF;
+  --n7-bg: #F4F6F9;
+  --n7-dark: #343A40;
+  --n7-border: #E2E8F0;
+}
+
+body.n7-body {
+  background-color: var(--n7-bg);
+  font-family: "Inter", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--n7-dark);
+}
+
+/* ---------- Shell ---------- */
+.n7-shell {
+  min-height: 100vh;
+}
+
+.n7-sidebar {
+  width: 264px;
+  background: linear-gradient(180deg, var(--n7-navy) 0%, var(--n7-blue) 100%);
+  color: var(--n7-white);
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
+.n7-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.n7-logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  background: var(--n7-white);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.n7-brand-nome {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.n7-brand-slogan {
+  font-size: 0.7rem;
+  opacity: 0.75;
+}
+
+.n7-nav {
+  padding: 14px 10px;
+  overflow-y: auto;
+}
+
+.n7-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.n7-nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--n7-white);
+}
+
+.n7-nav-item.ativo {
+  background: var(--n7-yellow);
+  color: var(--n7-navy);
+  font-weight: 600;
+}
+
+.n7-sidebar-footer {
+  padding: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.n7-sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.n7-sidebar-user-nome {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.n7-sidebar-user-perfil {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.n7-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.n7-topbar {
+  background: var(--n7-white);
+  border-bottom: 1px solid var(--n7-border);
+  padding: 12px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.n7-sidebar-toggle {
+  display: none !important;
+}
+
+.n7-topbar-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--n7-blue);
+}
+
+.n7-content {
+  flex: 1;
+  padding: 24px;
+}
+
+.n7-footer {
+  background: var(--n7-navy);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.8rem;
+}
+
+.n7-footer-inner {
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.n7-btn-icon {
+  color: var(--n7-blue);
+}
+
+.n7-btn-primary {
+  background: var(--n7-blue);
+  border-color: var(--n7-blue);
+}
+
+.n7-btn-primary:hover {
+  background: var(--n7-blue-dark);
+  border-color: var(--n7-blue-dark);
+}
+
+.n7-btn-success {
+  background: var(--n7-green);
+  border-color: var(--n7-green);
+}
+
+.n7-btn-warning {
+  background: var(--n7-yellow);
+  border-color: var(--n7-yellow);
+  color: var(--n7-navy);
+}
+
+.n7-card {
+  border: 1px solid var(--n7-border);
+  border-radius: 10px;
+  background: var(--n7-white);
+}
+
+.n7-card-header {
+  background: var(--n7-white);
+  border-bottom: 1px solid var(--n7-border);
+  font-weight: 600;
+  color: var(--n7-blue);
+}
+
+.n7-table thead th {
+  background: var(--n7-bg);
+  color: var(--n7-blue);
+  font-weight: 600;
+  border-bottom: 2px solid var(--n7-border);
+}
+
+.n7-badge-status {
+  font-size: 0.75rem;
+}
+
+/* ---------- Login ---------- */
+.n7-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--n7-navy) 0%, var(--n7-blue) 60%, #2A5298 100%);
+  padding: 24px;
+}
+
+.n7-login-card {
+  background: var(--n7-white);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+}
+
+.n7-login-header {
+  background: var(--n7-navy);
+  color: var(--n7-white);
+  padding: 30px 30px 24px;
+  text-align: center;
+}
+
+.n7-login-header img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  background: var(--n7-white);
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.n7-login-body {
+  padding: 28px 30px 30px;
+}
+
+/* ---------- Dashboard ---------- */
+.n7-stat-card {
+  border-left: 5px solid var(--n7-blue);
+}
+
+.n7-stat-card.alerta {
+  border-left-color: var(--n7-yellow);
+}
+
+.n7-stat-card.ok {
+  border-left-color: var(--n7-green);
+}
+
+.n7-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--n7-blue);
+}
+
+.n7-stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--n7-dark);
+  opacity: 0.7;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 991.98px) {
+  .n7-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1040;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-in-out;
+  }
+  .n7-sidebar.show {
+    transform: translateX(0);
+  }
+  .n7-sidebar-toggle {
+    display: inline-flex !important;
+  }
+  .n7-content {
+    padding: 16px;
+  }
+}

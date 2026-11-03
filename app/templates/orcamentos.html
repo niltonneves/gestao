@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Orçamentos – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Orçamentos</h4>
+  <a href="{{ url_for('orcamentos.criar') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Novo Orçamento</a>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <form method="get" class="row g-2">
+      <div class="col-md-4">
+        <select class="form-select" name="status">
+          <option value="">Todos os status</option>
+          <option value="elaboracao" {% if status == 'elaboracao' %}selected{% endif %}>Em elaboração</option>
+          <option value="enviado" {% if status == 'enviado' %}selected{% endif %}>Enviado</option>
+          <option value="aguardando_aprovacao" {% if status == 'aguardando_aprovacao' %}selected{% endif %}>Aguardando aprovação</option>
+          <option value="aprovado" {% if status == 'aprovado' %}selected{% endif %}>Aprovado</option>
+          <option value="recusado" {% if status == 'recusado' %}selected{% endif %}>Recusado</option>
+          <option value="vencido" {% if status == 'vencido' %}selected{% endif %}>Vencido</option>
+          <option value="cancelado" {% if status == 'cancelado' %}selected{% endif %}>Cancelado</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" name="q" placeholder="Buscar por cliente, CPF/CNPJ..." value="{{ q }}">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-secondary w-100" type="submit">Filtrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Cliente</th>
+            <th>Status</th>
+            <th>Emissão</th>
+            <th>Validade</th>
+            <th>Total</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in orcamentos %}
+          <tr>
+            <td>{{ "%05d"|format(o.numero) }}</td>
+            <td>{{ o.cliente.nome }}</td>
+            <td><span class="badge text-bg-{{ status_badge.get(o.status, 'secondary') }} n7-badge-status">{{ o.status }}</span></td>
+            <td>{{ o.data_emissao.strftime('%d/%m/%Y') if o.data_emissao else '-' }}</td>
+            <td>{{ o.validade.strftime('%d/%m/%Y') if o.validade else '-' }}</td>
+            <td>R$ {{ "%.2f"|format(o.total) }}</td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <a href="{{ url_for('orcamentos.editar', orcamento_id=o.id) }}" class="btn btn-outline-primary">Editar</a>
+                {% if o.status == 'elaboracao' %}
+                <form method="post" action="{{ url_for('orcamentos.alterar_status', orcamento_id=o.id, status='enviado') }}" class="d-inline">
+                  <button class="btn btn-outline-secondary" type="submit">Enviar</button>
+                </form>
+                {% endif %}
+                {% if o.status == 'enviado' %}
+                <form method="post" action="{{ url_for('orcamentos.alterar_status', orcamento_id=o.id, status='aguardando_aprovacao') }}" class="d-inline">
+                  <button class="btn btn-outline-warning" type="submit">Aguardar aprovação</button>
+                </form>
+                {% endif %}
+                {% if o.status == 'aguardando_aprovacao' %}
+                <form method="post" action="{{ url_for('orcamentos.aprovar', orcamento_id=o.id) }}" class="d-inline">
+                  <button class="btn btn-outline-success" type="submit">Aprovar</button>
+                </form>
+                <form method="post" action="{{ url_for('orcamentos.recusar', orcamento_id=o.id) }}" class="d-inline">
+                  <button class="btn btn-outline-danger" type="submit">Recusar</button>
+                </form>
+                {% endif %}
+                {% if o.status == 'aprovado' %}
+                <form method="post" action="{{ url_for('orcamentos.converter', orcamento_id=o.id) }}" class="d-inline">
+                  <button class="btn btn-outline-primary" type="submit">Converter em OS</button>
+                </form>
+                {% endif %}
+                {% if o.status in ['elaboracao','enviado','aguardando_aprovacao'] %}
+                <form method="post" action="{{ url_for('orcamentos.cancelar', orcamento_id=o.id) }}" class="d-inline">
+                  <button class="btn btn-outline-secondary" type="submit">Cancelar</button>
+                </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" class="text-center text-muted py-4">Nenhum orçamento encontrado.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

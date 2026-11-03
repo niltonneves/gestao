@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="mb-0 text-n7-blue">Dashboard</h4>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-4">
+    <div class="card n7-stat-card">
+      <div class="card-body">
+        <div class="n7-stat-value">{{ dados.total_clientes }}</div>
+        <div class="n7-stat-label">Clientes cadastrados</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="card n7-stat-card">
+      <div class="card-body">
+        <div class="n7-stat-value">{{ dados.orcamentos_abertos }}</div>
+        <div class="n7-stat-label">Orçamentos em aberto</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="card n7-stat-card alerta">
+      <div class="card-body">
+        <div class="n7-stat-value">{{ dados.orcamentos_vencidos }}</div>
+        <div class="n7-stat-label">Orçamentos vencidos</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="card n7-stat-card">
+      <div class="card-body">
+        <div class="n7-stat-value">{{ dados.os_abertas }}</div>
+        <div class="n7-stat-label">Ordens de serviço abertas</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="card n7-stat-card">
+      <div class="card-body">
+        <div class="n7-stat-value">{{ dados.os_andamento }}</div>
+        <div class="n7-stat-label">Ordens em andamento</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="card n7-stat-card ok">
+      <div class="card-body">
+        <div class="n7-stat-value">{{ dados.os_concluidas }}</div>
+        <div class="n7-stat-label">Ordens concluídas</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="card n7-stat-card">
+      <div class="card-body">
+        <div class="n7-stat-value">{{ dados.registros_recebidos }}</div>
+        <div class="n7-stat-label">Pagamentos recebidos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">Pendências recentes</div>
+      <div class="card-body">
+        <p class="mb-0">Módulos de indicadores, gráficos e notificações serão exibidos em esta área.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

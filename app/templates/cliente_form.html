@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}{% if edicao %}Editar Cliente{% else %}Novo Cliente{% endif %} – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 980px;">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>{% if edicao %}Editar Cliente{% else %}Cadastro de Cliente{% endif %}</span>
+    <a href="{{ url_for('clientes.listar') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+  </div>
+  <div class="card-body">
+    <form method="post" action="{% if edicao %}{{ url_for('clientes.editar', cliente_id=cliente.id) }}{% else %}{{ url_for('clientes.criar') }}{% endif %}">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Nome / Razão social *</label>
+          <input type="text" class="form-control" name="nome" value="{{ cliente.nome if cliente else '' }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Nome fantasia</label>
+          <input type="text" class="form-control" name="nome_fantasia" value="{{ cliente.nome_fantasia if cliente else '' }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" name="tipo">
+            <option value="pf" {% if cliente and cliente.tipo == 'pf' %}selected{% endif %}>Pessoa Física</option>
+            <option value="pj" {% if cliente and cliente.tipo == 'pj' %}selected{% endif %}>Pessoa Jurídica</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">CPF / CNPJ</label>
+          <input type="text" class="form-control" name="cpf_cnpj" value="{{ cliente.cpf_cnpj if cliente else '' }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">RG / Ins. Estadual</label>
+          <input type="text" class="form-control" name="rg" value="{{ cliente.rg if cliente else '' }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Inscrição Estadual</label>
+          <input type="text" class="form-control" name="inscricao_estadual" value="{{ cliente.inscricao_estadual if cliente else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Telefone</label>
+          <input type="text" class="form-control" name="telefone" value="{{ cliente.telefone if cliente else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">WhatsApp</label>
+          <input type="text" class="form-control" name="whatsapp" value="{{ cliente.whatsapp if cliente else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-control" name="email" value="{{ cliente.email if cliente else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Contato responsável</label>
+          <input type="text" class="form-control" name="contato_responsavel" value="{{ cliente.contato_responsavel if cliente else '' }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">CEP</label>
+          <input type="text" class="form-control" name="cep" value="{{ cliente.cep if cliente else '' }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Endereço</label>
+          <input type="text" class="form-control" name="endereco" value="{{ cliente.endereco if cliente else '' }}">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Número</label>
+          <input type="text" class="form-control" name="numero" value="{{ cliente.numero if cliente else '' }}">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Complemento</label>
+          <input type="text" class="form-control" name="complemento" value="{{ cliente.complemento if cliente else '' }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Bairro</label>
+          <input type="text" class="form-control" name="bairro" value="{{ cliente.bairro if cliente else '' }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Cidade</label>
+          <input type="text" class="form-control" name="cidade" value="{{ cliente.cidade if cliente else '' }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Estado</label>
+          <input type="text" class="form-control" name="estado" value="{{ cliente.estado if cliente else '' }}">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Observações</label>
+          <textarea class="form-control" name="observacoes" rows="3">{{ cliente.observacoes if cliente else '' }}</textarea>
+        </div>
+      </div>
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" type="submit">Salvar</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('clientes.listar') }}">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

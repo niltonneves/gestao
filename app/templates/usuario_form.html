@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{% if edicao %}Editar{% else %}Novo{% endif %} Usuário – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 700px;">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>{% if edicao %}Editar Usuário{% else %}Novo Usuário{% endif %}</span>
+    <a href="{{ url_for('administracao.index') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+  </div>
+  <div class="card-body">
+    <form method="post" action="{% if edicao %}{{ url_for('administracao.usuario_editar', usuario_id=usuario.id) }}{% else %}{{ url_for('administracao.usuario_novo') }}{% endif %}">
+      <div class="mb-3">
+        <label class="form-label">Nome</label>
+        <input type="text" class="form-control" name="nome" value="{{ usuario.nome if usuario else '' }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">E-mail</label>
+        <input type="email" class="form-control" name="email" value="{{ usuario.email if usuario else '' }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Perfil</label>
+        <select class="form-select" name="perfil">
+          {% for p in perfis %}
+          <option value="{{ p }}" {% if usuario and usuario.perfil == p %}selected{% endif %}>{{ p }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Senha (deixe em branco para não alterar)</label>
+        <input type="password" class="form-control" name="senha">
+      </div>
+      {% if not edicao %}
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="ativo" checked id="ativo">
+        <label class="form-check-label" for="ativo">Ativo</label>
+      </div>
+      {% endif %}
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" type="submit">Salvar</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('administracao.index') }}">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

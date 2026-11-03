@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Produtos e Serviços – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Produtos e Serviços</h4>
+  <a href="{{ url_for('catalogo.criar') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Novo Produto/Serviço</a>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Categoria</th>
+            <th>Tipo</th>
+            <th>Preço de venda</th>
+            <th>Custo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in produtos %}
+          <tr>
+            <td>{{ p.codigo }}</td>
+            <td>{{ p.descricao }}</td>
+            <td>{{ p.categoria }}</td>
+            <td>{{ p.tipo }}</td>
+            <td>R$ {{ "%.2f"|format(p.preco_venda) }}</td>
+            <td>R$ {{ "%.2f"|format(p.custo) }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center text-muted py-4">Nenhum produto/serviço cadastrado.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

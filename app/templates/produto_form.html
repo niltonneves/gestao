@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{% if edicao %}Editar{% else %}Novo{% endif %} Produto/Serviço – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 900px;">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>{% if edicao %}Editar Produto/Serviço{% else %}Novo Produto/Serviço{% endif %}</span>
+    <a href="{{ url_for('catalogo.listar') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+  </div>
+  <div class="card-body">
+    <form method="post" action="{% if edicao %}{{ url_for('catalogo.editar', produto_id=produto.id) }}{% else %}{{ url_for('catalogo.criar') }}{% endif %}">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Código</label>
+          <input type="text" class="form-control" name="codigo" value="{{ produto.codigo if produto else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Descrição *</label>
+          <input type="text" class="form-control" name="descricao" value="{{ produto.descricao if produto else '' }}" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Categoria</label>
+          <select class="form-select" name="categoria">
+            {% for c in categorias %}
+            <option value="{{ c }}" {% if produto and produto.categoria == c %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+            {% if not produto or produto.categoria not in categorias %}
+            <option value="Outros" selected>Outros</option>
+            {% endif %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" name="tipo">
+            {% for t in tipos %}
+            <option value="{{ t }}" {% if produto and produto.tipo == t %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Unidade</label>
+          <input type="text" class="form-control" name="unidade" value="{{ produto.unidade if produto else 'UN' }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Custo (R$)</label>
+          <input type="number" step="0.01" class="form-control" name="custo" value="{{ produto.custo if produto else 0 }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Preço de venda (R$)</label>
+          <input type="number" step="0.01" class="form-control" name="preco_venda" value="{{ produto.preco_venda if produto else 0 }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Tempo estimado (min)</label>
+          <input type="number" class="form-control" name="tempo_estimado" value="{{ produto.tempo_estimado if produto else 0 }}">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Garantia</label>
+          <input type="text" class="form-control" name="garantia" value="{{ produto.garantia if produto else '' }}">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Observações</label>
+          <textarea class="form-control" name="observacoes" rows="3">{{ produto.observacoes if produto else '' }}</textarea>
+        </div>
+      </div>
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-primary" type="submit">Salvar</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('catalogo.listar') }}">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

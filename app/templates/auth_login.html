@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Login – N7 Gestão{% endblock %}
+
+{% block content %}
+<div class="n7-login-page">
+  <div class="n7-login-card">
+    <div class="n7-login-header">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="N7 Gestão">
+      <h1 class="mt-2 h4">N7 Gestão</h1>
+      <p class="mb-0 small">Gestão Inteligente de Serviços</p>
+    </div>
+    <div class="n7-login-body">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+        {% endfor %}
+      {% endwith %}
+      <form method="post" action="{{ url_for('auth.login') }}">
+        <div class="mb-3">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-control" name="email" value="{{ form.email if form and form.email else '' }}" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Senha</label>
+          <input type="password" class="form-control" name="senha" required>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" name="lembrar" id="lembrar">
+          <label class="form-check-label" for="lembrar">Lembrar-me</label>
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Entrar</button>
+      </form>
+      {% if not usuarios_criados %}
+        <hr>
+        <p class="text-center small mb-0">Primeira instalação? <a href="{{ url_for('auth.primeiro_acesso') }}">Clique aqui</a> para criar o administrador inicial.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
